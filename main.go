@@ -49,12 +49,12 @@ func formatXml(file string, object Podcast) string {
 }
 
 func main() {
-	baseurl := flag.String("b", "localhost/", "Base url for rss")
-	configfile := flag.String("c", "urls.json", "Stream Urls")
-	rssfile := flag.String("o", "rss.xml", "Rss feed output file")
-	downloaddir := flag.String("d", "downloads/", "Downloads directory")
-	script := flag.String("s", "./downloader.sh", "Script used to download it will be passed url, time, outputfile")
-	timeout := flag.Duration("t", time.Duration(60)*time.Minute, "Time duration")
+	baseurl := flag.String("url", "localhost/", "Base url for rss")
+	configfile := flag.String("streams", "urls.json", "Stream Urls")
+	rssfile := flag.String("rss", "rss.xml", "Rss feed output file")
+	downloaddir := flag.String("downloads", "downloads/", "Downloads directory")
+	script := flag.String("script", "./downloader.sh", "Script used to download it will be passed url, time, outputfile")
+	timeout := flag.Duration("time", time.Duration(60)*time.Minute, "Time duration")
 	flag.Parse()
 	//json
 	urls := getUrls(*configfile)
@@ -67,11 +67,11 @@ func main() {
 		name = strings.Replace(name, " ", "_", -1)
 		year, tmonth, day := t.Date()
 		month := strings.ToLower(tmonth.String())
-		outputfile := name + "_" + month + "_" + strconv.Itoa(day) + "_" + strconv.Itoa(year) + ".mp4"
-		outputpath := path.Clean(*downloaddir + "/" + outputfile)
+		filename := name + "_" + month + "_" + strconv.Itoa(day) + "_" + strconv.Itoa(year) + ".mp4"
+		outputpath := path.Clean(*downloaddir + "/" + filename)
 		fmt.Println(outputpath)
 		//execute function
-		cmd := exec.Command(*script, url, strconv.FormatFloat(timeout.Seconds(), 'f', 6, 64), outputfile)
+		cmd := exec.Command(*script, url, strconv.FormatFloat(timeout.Seconds(), 'f', 6, 64), outputpath)
 		err := cmd.Start()
 		if err != nil {
 			panic(err)
@@ -81,16 +81,16 @@ func main() {
 		//get size of file
 		file, err := os.Open(outputpath)
 		if err != nil {
-			panic("Cant read filesize")
+			panic(err)
 		}
 		stat, _ := file.Stat()
-		x.Shows = append(x.Shows, Show{Title: key, Date: t.Format(time.RFC1123Z), Url: *baseurl + outputfile, Length: stat.Size()})
+		x.Shows = append(x.Shows, Show{Title: key, Date: t.Format(time.RFC1123Z), Url: *baseurl + filename, Length: stat.Size()})
 
 	}
 	xmlout := formatXml("template.xml", x)
 	f, err := os.Create(*rssfile)
 	if err != nil {
-		panic("Cant write rss file")
+		panic(err)
 	}
 	f.WriteString(xmlout)
 	f.Sync()
