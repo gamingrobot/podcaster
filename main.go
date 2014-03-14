@@ -79,13 +79,19 @@ func main() {
 		fmt.Println("Waiting for stream to finish")
 		err = cmd.Wait()
 		//get size of file
-		file, _ := os.Open(outputfile)
+		file, err := os.Open(outputfile)
+		if err != nil {
+			panic("Cant read filesize")
+		}
 		stat, _ := file.Stat()
 		x.Shows = append(x.Shows, Show{Title: key, Date: t.Format(time.RFC1123Z), Url: *baseurl + outputfile, Length: stat.Size()})
 
 	}
 	xmlout := formatXml("template.xml", x)
-	f, _ := os.Create(*rssfile)
+	f, err := os.Create(*rssfile)
+	if err != nil {
+		panic("Cant write rss file")
+	}
 	f.WriteString(xmlout)
 	f.Sync()
 }
