@@ -67,9 +67,9 @@ func main() {
 		name = strings.Replace(name, " ", "_", -1)
 		year, tmonth, day := t.Date()
 		month := strings.ToLower(tmonth.String())
-		outputfile := *downloaddir + "/" + name + "_" + month + "_" + strconv.Itoa(day) + "_" + strconv.Itoa(year) + ".mp4"
-		outputfile = path.Clean(outputfile)
-		fmt.Println(outputfile)
+		outputfile := name + "_" + month + "_" + strconv.Itoa(day) + "_" + strconv.Itoa(year) + ".mp4"
+		outputpath = path.Clean(*downloaddir + "/" + outputfile)
+		fmt.Println(outputpath)
 		//execute function
 		cmd := exec.Command(*script, url, strconv.FormatFloat(timeout.Seconds(), 'f', 6, 64), outputfile)
 		err := cmd.Start()
@@ -79,7 +79,7 @@ func main() {
 		fmt.Println("Waiting for stream to finish")
 		err = cmd.Wait()
 		//get size of file
-		file, err := os.Open(outputfile)
+		file, err := os.Open(outputpath)
 		if err != nil {
 			panic("Cant read filesize")
 		}
