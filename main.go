@@ -68,7 +68,7 @@ func main() {
 		year, tmonth, day := t.Date()
 		month := strings.ToLower(tmonth.String())
 		outputfile := name + "_" + month + "_" + strconv.Itoa(day) + "_" + strconv.Itoa(year) + ".mp4"
-		outputpath = path.Clean(*downloaddir + "/" + outputfile)
+		outputpath := path.Clean(*downloaddir + "/" + outputfile)
 		fmt.Println(outputpath)
 		//execute function
 		cmd := exec.Command(*script, url, strconv.FormatFloat(timeout.Seconds(), 'f', 6, 64), outputfile)
