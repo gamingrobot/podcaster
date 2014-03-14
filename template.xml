@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>PodCast Title</title>
+        <description>SomeDescription</description>
+        {{range .Shows}}
+        <item>
+            <title>{{.Title}}</title>
+            <pubDate>{{.Date}}</pubDate>
+            <enclosure url="{{.Url}}" length="{{.Length}}" type="audio/mpeg" />
+            <guid isPermaLink="false">{{.Url}}</guid>
+        </item>
+        {{end}}
+    </channel>
+</rss>
