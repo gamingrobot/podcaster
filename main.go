@@ -32,7 +32,7 @@ func getUrls(file string) map[string]string {
 	if err != nil {
 		panic("Could not find url file")
 	}
-	err = json.Unmarshal(urlfile, &urls)
+	json.Unmarshal(urlfile, &urls)
 	return urls
 }
 
