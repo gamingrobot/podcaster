@@ -77,7 +77,7 @@ func main() {
 			panic(err)
 		}
 		fmt.Println("Waiting for stream to finish")
-		err = cmd.Wait()
+		cmd.Wait()
 		//get size of file
 		file, err := os.Open(outputpath)
 		if err != nil {
