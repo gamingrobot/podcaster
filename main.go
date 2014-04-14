@@ -32,7 +32,7 @@ func getUrls(file string) map[string]string {
 	if err != nil {
 		panic("Could not find url file")
 	}
-	err = json.Unmarshal(urlfile, &urls)
+	json.Unmarshal(urlfile, &urls)
 	return urls
 }
 
@@ -77,7 +77,7 @@ func main() {
 			panic(err)
 		}
 		fmt.Println("Waiting for stream to finish")
-		err = cmd.Wait()
+		cmd.Wait()
 		//get size of file
 		file, err := os.Open(outputpath)
 		if err != nil {
